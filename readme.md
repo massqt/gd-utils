@@ -1,78 +1,78 @@
-# Google Drive 百宝箱
+# Google Drive Treasure Box
 
-> 不只是最快的 google drive 拷贝工具 [与其他工具的对比](./compare.md)
+> Not just the fastest copy tool for google drive [comparison with other tools] (./compare.md)
 
-## 功能简介
-本工具目前支持以下功能：
-- 统计任意（您拥有相关权限的，下同，不再赘述）目录的文件信息，且支持以各种形式（html, table, json）导出。  
-支持中断恢复，且统计过的目录（包括其所有子孙目录）信息会记录在本地数据库文件中（gdurl.sqlite）
-请在本项目目录下命令行输入 `./count -h` 查看使用帮助
+## Function Introduction
+This tool currently supports the following features:
+-Statistics of any (you have the relevant permissions, the same below, no longer repeat) the file information of the directory, and supports export in various forms (html, table, json).
+Support interrupt recovery, and the statistics of the directory (including all its descendants directory) information will be recorded in the local database file (gdurl.sqlite)
+Please enter `./count -h` on the command line in the project directory to view the help
 
-- 拷贝任意目录所有文件到您指定目录，同样支持中断恢复。
-支持根据文件大小过滤，可输入 `./copy -h` 查看使用帮助
+-Copy all files in any directory to the directory you specify, also support interrupt recovery.
+Support filtering according to file size, you can enter `./copy -h` to view the help
 
-- 对任意目录进行去重，删除同一目录下的md5值相同的文件（只保留一个），删除空目录。
-命令行输入 `./dedupe -h` 查看使用帮助
+-Deduplicate any directory, delete files with the same md5 value in the same directory (only one is kept), and delete empty directories.
+Command line input `./dedupe -h` View usage help
 
-- 在 config.js 里完成相关配置后，可以将本项目部署在（可正常访问谷歌服务的）服务器上，提供 http api 文件统计接口
+-After completing the relevant configuration in config.js, you can deploy this project on the server (which can normally access Google services), providing http api file statistics interface
 
-- 支持 telegram bot，配置完成后，上述功能均可通过 bot 进行操作
+-Support telegram bot, after configuration, the above functions can be operated by bot
 
 ## demo
 [https://drive.google.com/drive/folders/124pjM5LggSuwI1n40bcD5tQ13wS0M6wg](https://drive.google.com/drive/folders/124pjM5LggSuwI1n40bcD5tQ13wS0M6wg)
 
-## 环境配置
-本工具需要安装nodejs，客户端安装请访问[https://nodejs.org/zh-cn/download/](https://nodejs.org/zh-cn/download/)，服务器安装可参考[https://github.com/nodesource/distributions/blob/master/README.md#debinstall](https://github.com/nodesource/distributions/blob/master/README.md#debinstall)
+## Environment configuration
+This tool needs to install nodejs. For client installation, please visit [https://nodejs.org/zh-cn/download/](https://nodejs.org/zh-cn/download/), server installation can refer to [https ://github.com/nodesource/distributions/blob/master/README.md#debinstall](https://github.com/nodesource/distributions/blob/master/README.md#debinstall)
 
-如果你的网络环境无法正常访问谷歌服务，需要先在命令行进行一些配置：（如果可以正常访问则跳过此节）
+If your network environment cannot access Google services normally, you need to configure some on the command line first: (skip this section if you can access it normally)
 ```
 http_proxy="YOUR_PROXY_URL" && https_proxy=$http_proxy && HTTP_PROXY=$http_proxy && HTTPS_PROXY=$http_proxy
 ```
-请把`YOUR_PROXY_URL`替换成你自己的代理地址
+Please replace `YOUR_PROXY_URL` with your own proxy address
 
-## 依赖安装
-- 命令行执行`git clone https://github.com/iwestlin/gd-utils && cd gd-utils` 克隆并切换到本项目文件夹下
-- 执行 `npm i` 安装依赖，部分依赖可能需要代理环境才能下载，所以需要上一步的配置
+## Depends on installation
+-Command line execution `git clone https://github.com/iwestlin/gd-utils && cd gd-utils` clone and switch to this project folder
+-Execute `npm i` to install dependencies, some dependencies may require agent environment to download, so the previous configuration is required
 
-如果在安装过程中发生报错，请切换nodejs版本到v12再试。如果报错信息里有`Error: not found: make`之类的消息，说明你的命令行环境缺少make命令，可参考[这里](https://askubuntu.com/questions/192645/make-command-not-found)或直接google搜索`Make Command Not Found`
+If an error occurs during installation, please switch the nodejs version to v12 and try again. If there is a message like "Error: not found: make" in the error message, it means your command line environment is missing the make command, you can refer to [here](https://askubuntu.com/questions/192645/make-command- not-found) or directly google search `Make Command Not Found`
 
-依赖安装完成后，项目文件夹下会多出个`node_modules`目录，请不要删除它，接下来进行下一步配置。
+After the dependency installation is complete, there will be an additional `node_modules` directory in the project folder. Please do not delete it. Then proceed to the next configuration.
 
-## Service Account 配置
-强烈建议使用service account（后称SA）, 获取方法请参见 [https://gsuitems.com/index.php/archives/13/](https://gsuitems.com/index.php/archives/13/#%E6%AD%A5%E9%AA%A42%E7%94%9F%E6%88%90serviceaccounts)
-获取到 SA 的 json 文件后，请将其拷贝到 `sa` 目录下
+## Service Account configuration
+It is strongly recommended to use a service account (hereinafter referred to as SA), please refer to [https://gsuitems.com/index.php/archives/13/](https://gsuitems.com/index.php/archives/13/ #%E6%AD%A5%E9%AA%A42%E7%94%9F%E6%88%90serviceaccounts)
+After obtaining the SA json file, please copy it to the `sa` directory
 
-配置好 SA 以后，如果你不需要对个人盘下的文件进行操作，可跳过[个人帐号配置]这节，而且执行命令的时候，记得带上 `-S` 参数告诉程序使用SA授权进行操作。
+After configuring the SA, if you do not need to operate the files in the personal disk, you can skip the [personal account configuration] section, and when executing the command, remember to bring the `-S` parameter to tell the program to use SA authorization to operate .
 
-## 个人帐号配置
-- 命令行执行 `rclone config file` 找到 rclone 的配置文件路径
-- 打开这个配置文件 `rclone.conf`, 找到 `client_id`, `client_secret` 和 `refresh_token` 这三个变量，将其分别填入本项目下的 `config.js` 中，需要注意这三个值必须被成对的英文引号包裹，且引号后以英文逗号结尾，也就是需要符合JavaScript的[对象语法](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Object_initializer)
+## Personal account configuration
+-Run `rclone config file` on the command line to find the path of rclone's configuration file
+-Open the configuration file `rclone.conf`, find the three variables `client_id`, `client_secret` and `refresh_token`, and fill them in `config.js` under this project respectively, you need to pay attention to these three values Must be wrapped in pairs of English quotation marks, and the quotation marks end with a comma, which is required to comply with JavaScript [Object Syntax](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/ Operators/Object_initializer)
 
-如果你没有配置过rclone，可以搜索`rclone google drive 教程`完成相关配置。  
+If you have not configured rclone, you can search for `rclone google drive tutorial` to complete the relevant configuration.
 
-如果你的`rclone.conf`里没有`client_id`和`client_secret`，说明你配置rclone的时候默认用了rclone自己的client_id，连rclone自己[都不建议这样做](https://github.com/rclone/rclone/blob/8d55367a6a2f47a1be7e360a872bd7e56f4353df/docs/content/drive.md#making-your-own-client_id)，因为大家共享了它的接口调用限额，在使用高峰期可能会触发限制。
+If your `rclone.conf` does not have `client_id` and `client_secret`, it means that when you configure rclone, you use rclone’s own client_id by default, even rclone [does not recommend it] (https://github.com /rclone/rclone/blob/8d55367a6a2f47a1be7e360a872bd7e56f4353df/docs/content/drive.md#making-your-own-client_id), because everyone shares its interface call limit, the limit may be triggered during peak usage periods.
 
-获取自己的clinet_id可以参见这两篇文章：[Cloudbox/wiki/Google-Drive-API-Client-ID-and-Client-Secret](https://github.com/Cloudbox/Cloudbox/wiki/Google-Drive-API-Client-ID-and-Client-Secret) 和 [https://p3terx.com/archives/goindex-google-drive-directory-index.html#toc_2](https://p3terx.com/archives/goindex-google-drive-directory-index.html#toc_2)
+You can refer to these two articles to get your own clinet_id: [Cloudbox/wiki/Google-Drive-API-Client-ID-and-Client-Secret](https://github.com/Cloudbox/Cloudbox/wiki/Google-Drive -API-Client-ID-and-Client-Secret) and [https://p3terx.com/archives/goindex-google-drive-directory-index.html#toc_2](https://p3terx.com/archives/ goindex-google-drive-directory-index.html#toc_2)
 
-获取到client_id和client_secret后，再次执行一遍`rclone config`，创建一个新的remote，**在配置过程中一定要填入你新获取的clinet_id和client_secret**，就能在`rclone.conf`里看到新获取的`refresh_token`了。**注意，不能使用之前的refrest_token**，因为它对应的是rclone自带的client_id
+After obtaining client_id and client_secret, execute `rclone config` again to create a new remote. **In the configuration process, you must fill in your newly acquired clinet_id and client_secret**, which can be in `rclone.conf` See the newly acquired `refresh_token`. **Note that the previous refrest_token** cannot be used because it corresponds to the client_id that comes with rclone
 
-参数配置好以后，在命令行执行 `node check.js`，如果命令返回了你的谷歌硬盘根目录的数据，说明配置成功，可以开始使用本工具了。
+After the parameters are configured, execute `node check.js` on the command line. If the command returns the data of the root directory of your Google hard disk, it means that the configuration is successful and you can start using the tool.
 
-## Bot配置
-如果要使用 telegram bot 功能，需要进一步配置。
+## Bot configuration
+If you want to use the telegram bot function, further configuration is required.
 
-首先在 [https://core.telegram.org/bots#6-botfather](https://core.telegram.org/bots#6-botfather) 根据指示拿到 bot 的 token，然后填入 config.js 中的 `tg_token` 变量。
+First get the token of the bot according to the instructions at [https://core.telegram.org/bots#6-botfather](https://core.telegram.org/bots#6-botfather), then fill in config.js The `tg_token` variable in.
 
-接下来需要将代码部署到服务器上。
-如果你一开始就是在服务器上配置的，可以直接执行`npm i pm2 -g`
+Next, you need to deploy the code to the server.
+If you configured it on the server from the beginning, you can directly execute `npm i pm2 -g`
 
-如果你之前是在本地操作的，请在服务器上同样重复一遍，配置好相关参数后，执行`npm i pm2 -g`安装进程守护程序pm2
+If you have operated locally before, please repeat it on the server again. After configuring the relevant parameters, execute `npm i pm2 -g` to install the process daemon pm2
 
-安装好pm2之后，执行 `pm2 start server.js`，代码运行后会在服务器上监听`23333`端口。
+After installing pm2, execute `pm2 start server.js`. After the code is run, it will listen to `23333` port on the server.
 
-*如果你不想用nginx，可以将`server.js`中的`23333`改成`80`直接监听80端口（可能需要root权限）*
+*If you don’t want to use nginx, you can change `23333` in `server.js` to `80` to listen directly to port 80 (may require root permission)*
 
-接下来可通过nginx或其他工具起一个web服务，示例nginx配置：
+Next, you can start a web service through nginx or other tools. Example nginx configuration:
 ```
 server {
   listen 80;
@@ -86,44 +86,44 @@ server {
   }
 }
 ```
-配置好nginx后，可以再套一层cloudflare，具体教程请自行搜索。
+After configuring nginx, you can set another layer of cloudflare, please search for specific tutorials.
 
-检查网站是否部署成功，可以命令行执行（请将YOUR_WEBSITE_URL替换成你的网址）
+Check if the website is successfully deployed, you can execute it from the command line (please replace YOUR_WEBSITE_URL with your URL)
 ```
-curl 'YOUR_WEBSITE_URL/api/gdurl/count?fid=124pjM5LggSuwI1n40bcD5tQ13wS0M6wg'
+curl'YOUR_WEBSITE_URL/api/gdurl/count?fid=124pjM5LggSuwI1n40bcD5tQ13wS0M6wg'
 ```
 ![](./static/count.png)
 
-如果返回了这样的文件统计，说明部署成功了。
+If such file statistics are returned, the deployment is successful.
 
-最后，在命令行执行（请将[YOUR_WEBSITE]和[YOUR_BOT_TOKEN]分别替换成你自己的网址和bot token）
+Finally, execute on the command line (please replace [YOUR_WEBSITE] and [YOUR_BOT_TOKEN] with your own URL and bot token, respectively)
 ```
-curl -F "url=[YOUR_WEBSITE]/api/gdurl/tgbot" 'https://api.telegram.org/bot[YOUR_BOT_TOKEN]/setWebhook'
+curl -F "url=[YOUR_WEBSITE]/api/gdurl/tgbot"'https://api.telegram.org/bot[YOUR_BOT_TOKEN]/setWebhook'
 ```
-这样，就将你的服务器连接上你的 telegram bot 了，试着给bot发送个 `/help`，如果它回复给你使用说明，那就配置成功了。
+In this way, connect your server to your telegram bot, try to send `/help` to the bot, and if it replies to you with instructions, then the configuration is successful.
 
-## 补充说明
-在`config.js`文件里，还有另外的几个参数：
+## Supplementary explanation
+In the `config.js` file, there are several other parameters:
 ```
-// 单次请求多少毫秒未响应以后超时（基准值，若连续超时则下次调整为上次的2倍）
+// How many milliseconds of a single request does not respond after a timeout (the reference value, if it continuously times out, the next time it is adjusted to twice the previous time)
 const TIMEOUT_BASE = 7000
 
-// 最大超时设置，比如某次请求，第一次7s超时，第二次14s，第三次28s，第四次56s，第五次不是112s而是60s，后续同理
+// The maximum timeout setting, such as a certain request, the first 7s timeout, the second 14s, the third 28s, the fourth 56s, the fifth time is not 112s but 60s, the same is true for subsequent
 const TIMEOUT_MAX = 60000
 
-const LOG_DELAY = 5000 // 日志输出时间间隔，单位毫秒
-const PAGE_SIZE = 1000 // 每次网络请求读取目录下的文件数，数值越大，越有可能超时，不得超过1000
+const LOG_DELAY = 5000 // Log output interval, in milliseconds
+const PAGE_SIZE = 1000 // Each network request reads the number of files in the directory. The larger the value, the more likely it will time out, and it must not exceed 1000
 
-const RETRY_LIMIT = 7 // 如果某次请求失败，允许其重试的最大次数
-const PARALLEL_LIMIT = 20 // 网络请求的并行数量，可根据网络环境调整
+const RETRY_LIMIT = 7 // If a request fails, the maximum number of retries allowed
+const PARALLEL_LIMIT = 20 // The number of parallel network requests, which can be adjusted according to the network environment
 
-const DEFAULT_TARGET = '' // 必填，拷贝默认目的地ID，如果不指定target，则会拷贝到此处，建议填写团队盘ID，注意要用英文引号包裹
+const DEFAULT_TARGET ='' // Required, copy the default destination ID, if you do not specify the target, it will be copied here, it is recommended to fill in the team disk ID, pay attention to use English quotation marks
 ```
-读者可根据各自情况进行调整
+Readers can adjust according to their respective circumstances
 
-## 注意事项
-程序的原理是调用了[google drive官方接口](https://developers.google.com/drive/api/v3/reference/files/list)，递归获取目标文件夹下所有文件及其子文件夹信息，粗略来讲，某个目录下包含多少个文件夹，就至少需要这么多次请求才能统计完成。
+## Precautions
+The principle of the program is to call [Google Drive Official Interface] (https://developers.google.com/drive/api/v3/reference/files/list) to recursively obtain all files and subfolder information under the target folder Roughly speaking, as many folders as there are in a certain directory, it takes at least so many requests to complete the statistics.
 
-目前尚不知道google是否会对接口做频率限制，也不知道会不会影响google账号本身的安全。
+It is not known whether Google will limit the frequency of the interface, or whether it will affect the security of the Google account itself.
 
-**请勿滥用，后果自负**
+**Please don't abuse it at your own risk**
